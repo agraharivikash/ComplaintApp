@@ -1,0 +1,39 @@
+@model MvcDemo25.web.Models.Complaint
+@using MvcDemo25.web.Models
+
+<h2>@Model.Title</h2>
+<p>@Model.Description</p>
+<p>Category: @Model.Category</p>
+<p>Priority: @Model.Priority</p>
+<p>Status: <span class="badge @(Model.Status == ComplaintStatus.Open ? "bg-danger" : Model.Status == ComplaintStatus.InProgress ? "bg-warning text-dark" : "bg-success")">@Model.Status</span></p>
+<p>Created: @Model.CreatedAt.ToLocalTime()</p>
+
+<h3>Comments</h3>
+<ul class="list-group mb-3">
+    @foreach (var c in Model.Comments)
+    {
+        <li class="list-group-item">
+            <div>@c.Text</div>
+            <small class="text-muted">@c.CreatedAt.ToLocalTime()</small>
+        </li>
+    }
+</ul>
+
+<form method="post" asp-action="AddComment">
+    <input type="hidden" name="complaintId" value="@Model.Id" />
+    <div class="mb-3">
+        <textarea class="form-control" name="text"></textarea>
+    </div>
+    <button class="btn btn-primary">Add Comment</button>
+</form>
+
+@if (User?.IsInRole("Admin") ?? false)
+{
+    <form method="post" asp-controller="Admin" asp-action="UpdateStatus" class="mt-3">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <select name="status" class="form-select w-auto d-inline-block">
+            @foreach (var s in Enum.GetValues(typeof(ComplaintStatus))) { <option value="@s">@s</option> }
+        </select>
+        <button class="btn btn-sm btn-primary">Update Status</button>
+    </form>
+}

@@ -1,0 +1,35 @@
+@model IEnumerable<MvcDemo25.web.Models.Complaint>
+@using MvcDemo25.web.Models
+
+<h2>Admin Dashboard</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Comments</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var c in Model)
+        {
+            <tr>
+                <td>@c.Title</td>
+                <td>@c.Status</td>
+                <td>@c.Priority</td>
+                <td>@c.Comments.Count()</td>
+                <td>
+                    <form method="post" asp-action="UpdateStatus">
+                        <input type="hidden" name="id" value="@c.Id" />
+                        <select name="status" class="form-select d-inline-block w-auto">
+                            @foreach(var s in Enum.GetValues(typeof(ComplaintStatus))) { <option value="@s">@s</option> }
+                        </select>
+                        <button class="btn btn-sm btn-primary">Update</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

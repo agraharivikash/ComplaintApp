@@ -1,0 +1,33 @@
+@model MvcDemo25.web.Models.Complaint
+@using MvcDemo25.web.Models
+
+<h2>Register Complaint</h2>
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input class="form-control" asp-for="Title" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" asp-for="Description"></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select class="form-select" asp-for="Category">
+            @foreach (var c in Enum.GetValues(typeof(ComplaintCategory)))
+            {
+                <option value="@c">@c</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Priority</label>
+        <select class="form-select" asp-for="Priority">
+            @foreach (var p in Enum.GetValues(typeof(ComplaintPriority)))
+            {
+                <option value="@p">@p</option>
+            }
+        </select>
+    </div>
+    <button class="btn btn-primary">Submit</button>
+</form>

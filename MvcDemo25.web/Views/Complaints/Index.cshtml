@@ -1,0 +1,64 @@
+@model IEnumerable<MvcDemo25.web.Models.Complaint>
+@using MvcDemo25.web.Models
+
+<h2>Complaints</h2>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input class="form-control" name="q" placeholder="Search" />
+    </div>
+    <div class="col-auto">
+        <select class="form-select" name="status">
+            <option value="">All status</option>
+            @foreach (var s in Enum.GetValues(typeof(ComplaintStatus)))
+            {
+                <option value="@s">@s</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <select class="form-select" name="priority">
+            <option value="">All priority</option>
+            @foreach (var p in Enum.GetValues(typeof(ComplaintPriority)))
+            {
+                <option value="@p">@p</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Register Complaint</a>
+    @if (User?.IsInRole("Admin") ?? false)
+    {
+        <a class="btn btn-secondary ms-2" asp-controller="Admin" asp-action="Dashboard">Admin Dashboard</a>
+    }
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Priority</td>
+                <td>
+                    <span class="badge @(item.Status == ComplaintStatus.Open ? "bg-danger" : item.Status == ComplaintStatus.InProgress ? "bg-warning text-dark" : "bg-success")">@item.Status</span>
+                </td>
+                <td>@item.CreatedAt.ToLocalTime()</td>
+                <td><a asp-action="Details" asp-route-id="@item.Id" class="btn btn-link">View</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
